@@ -1,32 +1,24 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../components/ui/avatar";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Progress } from "../../components/ui/progress";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 export type GroupMember = {
   id: string;
   name: string;
+  role: "leader" | "member";
   avatar?: string;
 };
 
 export type Group = {
   id: string;
   name: string;
-  leader: string;
+  description?: string; // Added description field
   projectId: string;
   projectTitle: string;
-  members: any[];
+  members: GroupMember[];
   progress: number;
   hasUnreadMessages?: boolean;
 };
@@ -37,7 +29,7 @@ type GroupCardProps = {
 };
 
 export function GroupCard({ group, onClick }: GroupCardProps) {
-  const leader = group.leader;
+  const leader = group.members.find(member => member.role === "leader");
 
   return (
     <Card className="card-hover overflow-hidden border-t-4 border-t-academe-500">
@@ -49,10 +41,7 @@ export function GroupCard({ group, onClick }: GroupCardProps) {
               <Badge className="ml-2 bg-red-500 text-white h-2 w-2 p-0 rounded-full" />
             )}
           </CardTitle>
-          <Badge
-            variant="outline"
-            className="bg-academe-100 text-academe-800 dark:bg-academe-900/30 dark:text-academe-300"
-          >
+          <Badge variant="outline" className="bg-academe-100 text-academe-800 dark:bg-academe-900/30 dark:text-academe-300">
             {group.members.length} Members
           </Badge>
         </div>
@@ -66,27 +55,24 @@ export function GroupCard({ group, onClick }: GroupCardProps) {
             </div>
             <Progress value={group.progress} className="h-2" />
           </div>
-
+          
           <div>
             <p className="text-sm mb-2">
               <span className="text-muted-foreground">Project: </span>
               {group.projectTitle}
             </p>
-
+            
             <p className="text-sm mb-3">
               <span className="text-muted-foreground">Team Leader: </span>
-              {leader ? leader : "Not assigned"}
+              {leader ? leader.name : "Not assigned"}
             </p>
           </div>
-
+          
           <div>
             <p className="text-sm text-muted-foreground mb-2">Team Members:</p>
             <div className="flex -space-x-2">
               {group.members.slice(0, 5).map((member) => (
-                <Avatar
-                  key={member.id}
-                  className="h-8 w-8 border-2 border-white dark:border-gray-900"
-                >
+                <Avatar key={member.id} className="h-8 w-8 border-2 border-white dark:border-gray-900">
                   <AvatarImage src={member.avatar} />
                   <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                 </Avatar>

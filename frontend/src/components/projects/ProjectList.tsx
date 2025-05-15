@@ -1,34 +1,36 @@
+
 import { useState } from "react";
 import { ProjectCard, Project } from "./ProjectCard";
-import { Input } from "../../components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type ProjectListProps = {
   projects: Project[];
   onProjectClick?: (project: Project) => void;
+  onEditClick?: (project: Project) => void;
+  onDeleteClick?: (project: Project) => void;
+  userRole?: string;
+  userId?: string;
 };
 
-export function ProjectList({ projects, onProjectClick }: ProjectListProps) {
+export function ProjectList({ 
+  projects, 
+  onProjectClick, 
+  onEditClick,
+  onDeleteClick,
+  userRole = "student",
+  userId = "",
+}: ProjectListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-
+  
   const filteredProjects = projects.filter((project) => {
-    const matchesSearch =
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-    const matchesStatus =
-      statusFilter === "all" || project.status === statusFilter;
-
+    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         project.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesStatus = statusFilter === "all" || project.status === statusFilter;
+    
     return matchesSearch && matchesStatus;
   });
 
@@ -44,8 +46,11 @@ export function ProjectList({ projects, onProjectClick }: ProjectListProps) {
           />
         </div>
         <div className="w-full sm:w-40">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger>
+          <Select 
+            value={statusFilter} 
+            onValueChange={setStatusFilter}
+          >
+            <SelectTrigger className="border-academe-300 focus:ring-academe-400">
               <SelectValue placeholder="Status Filter" />
             </SelectTrigger>
             <SelectContent>
@@ -57,7 +62,7 @@ export function ProjectList({ projects, onProjectClick }: ProjectListProps) {
           </Select>
         </div>
       </div>
-
+      
       {filteredProjects.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-muted-foreground">No projects found</p>
@@ -69,6 +74,10 @@ export function ProjectList({ projects, onProjectClick }: ProjectListProps) {
               key={project.id}
               project={project}
               onClick={() => onProjectClick && onProjectClick(project)}
+              onEdit={() => onEditClick && onEditClick(project)}
+              onDelete={() => onDeleteClick && onDeleteClick(project)}
+              userRole={userRole}
+              userId={userId}
             />
           ))}
         </div>

@@ -1,24 +1,12 @@
+
 import { useState } from "react";
 import { DashboardLayout } from "../components/layout/DashboardLayout";
-import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { Label } from "../components/ui/label";
-import { Switch } from "../components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
-import { useToast } from "../components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -27,18 +15,15 @@ const Settings = () => {
     taskReminders: true,
     projectUpdates: true,
     theme: "system",
-    language: "english",
+    language: "english"
   });
 
   const handleSwitchChange = (setting: string) => {
-    setSettings((prev) => ({
-      ...prev,
-      [setting]: !prev[setting as keyof typeof prev],
-    }));
+    setSettings(prev => ({ ...prev, [setting]: !prev[setting as keyof typeof prev] }));
   };
 
   const handleSelectChange = (value: string, setting: string) => {
-    setSettings((prev) => ({ ...prev, [setting]: value }));
+    setSettings(prev => ({ ...prev, [setting]: value }));
   };
 
   const handleSaveSettings = () => {
@@ -64,16 +49,12 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Notifications</CardTitle>
-              <CardDescription>
-                Configure how and when you receive notifications.
-              </CardDescription>
+              <CardDescription>Configure how and when you receive notifications.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="emailNotifications" className="text-base">
-                    Email Notifications
-                  </Label>
+                  <Label htmlFor="emailNotifications" className="text-base">Email Notifications</Label>
                   <p className="text-sm text-muted-foreground">
                     Receive email notifications for important updates.
                   </p>
@@ -81,17 +62,13 @@ const Settings = () => {
                 <Switch
                   id="emailNotifications"
                   checked={settings.emailNotifications}
-                  onCheckedChange={() =>
-                    handleSwitchChange("emailNotifications")
-                  }
+                  onCheckedChange={() => handleSwitchChange("emailNotifications")}
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="taskReminders" className="text-base">
-                    Task Reminders
-                  </Label>
+                  <Label htmlFor="taskReminders" className="text-base">Task Reminders</Label>
                   <p className="text-sm text-muted-foreground">
                     Get reminders for upcoming and overdue tasks.
                   </p>
@@ -105,9 +82,7 @@ const Settings = () => {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="projectUpdates" className="text-base">
-                    Project Updates
-                  </Label>
+                  <Label htmlFor="projectUpdates" className="text-base">Project Updates</Label>
                   <p className="text-sm text-muted-foreground">
                     Receive notifications about changes to your projects.
                   </p>
@@ -125,15 +100,13 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
-              <CardDescription>
-                Customize your application theme and display settings.
-              </CardDescription>
+              <CardDescription>Customize your application theme and display settings.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-2">
                 <Label htmlFor="theme">Theme Mode</Label>
-                <Select
-                  value={settings.theme}
+                <Select 
+                  value={settings.theme} 
                   onValueChange={(value) => handleSelectChange(value, "theme")}
                 >
                   <SelectTrigger id="theme">
@@ -149,11 +122,9 @@ const Settings = () => {
 
               <div className="grid gap-2">
                 <Label htmlFor="language">Language</Label>
-                <Select
-                  value={settings.language}
-                  onValueChange={(value) =>
-                    handleSelectChange(value, "language")
-                  }
+                <Select 
+                  value={settings.language} 
+                  onValueChange={(value) => handleSelectChange(value, "language")}
                 >
                   <SelectTrigger id="language">
                     <SelectValue placeholder="Select language" />

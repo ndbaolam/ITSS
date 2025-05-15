@@ -1,26 +1,21 @@
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-export type Assignee = {
-  id: string;
-  name: string;
-  avatar?: string;
-};
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 export type Task = {
   id: string;
   title: string;
   description: string;
-  status: "todo" | "in-progress" | "review" | "completed" | "pending";
+  status: "todo" | "in-progress" | "review" | "completed";
   priority: "low" | "medium" | "high";
   dueDate: string;
-  assignee?: any[];
+  assignee?: {
+    id: string;
+    name: string;
+    avatar?: string;
+  };
   projectId: string;
   projectTitle: string;
 };
@@ -34,21 +29,15 @@ type TaskCardProps = {
 export function TaskCard({ task, onClick, compact = false }: TaskCardProps) {
   const priorityColor = {
     low: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-    medium:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+    medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
     high: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
   };
 
   const statusColor = {
     todo: "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400",
-    "in-progress":
-      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-    review:
-      "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
-    completed:
-      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-    pending:
-      "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400",
+    "in-progress": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    review: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+    completed: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
   };
 
   const statusText = {
@@ -56,21 +45,10 @@ export function TaskCard({ task, onClick, compact = false }: TaskCardProps) {
     "in-progress": "In Progress",
     review: "In Review",
     completed: "Completed",
-    pending: "Pending",
   };
 
   return (
-    <Card
-      className="card-hover border-l-4"
-      style={{
-        borderLeftColor:
-          task.priority === "high"
-            ? "#f87171"
-            : task.priority === "medium"
-            ? "#facc15"
-            : "#4ade80",
-      }}
-    >
+    <Card className="card-hover border-l-4" style={{ borderLeftColor: task.priority === "high" ? "#f87171" : task.priority === "medium" ? "#facc15" : "#4ade80" }}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-md">{task.title}</CardTitle>
@@ -87,34 +65,27 @@ export function TaskCard({ task, onClick, compact = false }: TaskCardProps) {
         )}
         <div className="flex justify-between items-center">
           <Badge className={priorityColor[task.priority]} variant="outline">
-            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}{" "}
-            Priority
+            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} Priority
           </Badge>
           <span className="text-sm text-muted-foreground">
             Due: {new Date(task.dueDate).toLocaleDateString()}
           </span>
         </div>
-
+        
         <div className="flex justify-between items-center mt-3">
-          {task.assignee && task.assignee.length > 0 ? (
+          {task.assignee ? (
             <div className="flex items-center space-x-2">
-              {task.assignee.map((assignee) => (
-                <div key={assignee.id} className="flex items-center space-x-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={assignee.avatar} />
-                    <AvatarFallback>{assignee.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm">{assignee.name}</span>
-                </div>
-              ))}
+              <Avatar className="h-6 w-6">
+                <AvatarImage src={task.assignee.avatar} />
+                <AvatarFallback>{task.assignee.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm">{task.assignee.name}</span>
             </div>
           ) : (
-            <span className="text-sm text-muted-foreground italic">
-              Unassigned
-            </span>
+            <span className="text-sm text-muted-foreground italic">Unassigned</span>
           )}
         </div>
-
+        
         {!compact && (
           <div className="mt-3">
             <span className="text-xs text-muted-foreground">Project: </span>
@@ -123,18 +94,10 @@ export function TaskCard({ task, onClick, compact = false }: TaskCardProps) {
         )}
       </CardContent>
       <CardFooter className="pt-2">
-        <Button
-          onClick={onClick}
-          className="w-full"
-          variant={task.status === "completed" ? "outline" : "default"}
-        >
-          {task.status === "todo"
-            ? "Start Task"
-            : task.status === "in-progress"
-            ? "Submit for Review"
-            : task.status === "review"
-            ? "View Details"
-            : "View Details"}
+        <Button onClick={onClick} className="w-full" variant={task.status === "completed" ? "outline" : "default"}>
+          {task.status === "todo" ? "Start Task" : 
+           task.status === "in-progress" ? "Submit for Review" :
+           task.status === "review" ? "View Details" : "View Details"}
         </Button>
       </CardFooter>
     </Card>

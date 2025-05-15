@@ -24,7 +24,7 @@ export default defineConfig(() => ({
   },
   plugins: [
     react(),
-    // tsconfigPaths()
+    tsconfigPaths()
   ],
   watch: {
     usePolling: true,
